@@ -2,7 +2,11 @@ const INITIAL = 0;
 const COUNTDOWN = 1;
 const PAUSED = 2;
 
+const SESSION = 0;
+const BREAK = 1;
+
 let state = {
+    mode: SESSION,
     timerState: INITIAL,
     interval: null,
     sessionLength: 25,
@@ -16,6 +20,7 @@ let buttons = $(".button").click(click);
 let sessionLength = $("#session-length")[0];
 let breakLength = $("#break-length")[0];
 let timer = $("#time-left")[0];
+let timerLabel = $("#timer-label")[0];
 
 function updateUI(){
     sessionLength.innerHTML = state.sessionLength;
@@ -34,17 +39,36 @@ function updateDisplay(){
     state.displayTime = minutes + ":" + seconds;
 }
 
-function setTimer(length){
+function setTimer(length, mode){
     state.timeLeft.setTime(0);
     state.timeLeft.setMinutes(length);
+    state.mode = mode;
     state.timerStart = new Date();
     updateDisplay();
+}
+
+function changeMode(){
+    switch(state.mode){
+        case SESSION:
+            setTimer(state.breakLength, BREAK);
+            timerLabel.innerHTML = "Break";
+            break;
+        case BREAK:
+            setTimer(state.breakLength, SESSION);
+            timerLabel.innerHTML = "Session";
+    }
 }
 
 function updateTime(){
     let currentTime = new Date();
     let elapsedTime = currentTime - state.timerStart;
     state.timeLeft.setTime(state.timeLeft - elapsedTime);
+
+    if(state.timeLeft.getTime() < 0){
+        changeMode();
+        return;
+    }
+
     updateDisplay();
     updateUI()
     state.timerStart = new Date();
@@ -56,8 +80,8 @@ function sessionChange(val){
     if(!(nextVal < 1 || nextVal > 60)){
         state.sessionLength = nextVal;
     }
-    setTimer(state.sessionLength);
-    updateUI();
+    setTimer(state.sessionLength, SESSION);
+    timerLabel.innerHTML = "Session";
 }
 
 function breakChange(val){
@@ -65,6 +89,8 @@ function breakChange(val){
     if(!(nextVal < 1 || nextVal > 60)){
         state.breakLength = nextVal;
     }
+    setTimer(state.sessionLength, SESSION);
+    timerLabel.innerHTML = "Session";
 }
 
 function click(e){
@@ -83,13 +109,13 @@ function click(e){
             break;
         case 'start_stop':
             if(state.timerState === INITIAL){
-                state.interval = setInterval(updateTime, 1000);
+                state.interval = setInterval(updateTime, 100);
                 state.timerState = COUNTDOWN;
-                setTimer(state.sessionLength);
+                setTimer(state.sessionLength, SESSION);
             }
             else if(state.timerState === PAUSED){
                 state.timerStart = new Date();
-                state.interval = setInterval(updateTime, 1000);
+                state.interval = setInterval(updateTime, 100);
                 state.timerState = COUNTDOWN;
             }
             else if(state.timerState === COUNTDOWN){
@@ -102,11 +128,12 @@ function click(e){
             state.timerState = INITIAL;
             state.sessionLength = 25;
             state.breakLength = 5;
-            setTimer(state.sessionLength);
+            setTimer(state.sessionLength, SESSION);
+            timerLabel.innerHTML = "Session";
             break;
     }
     updateUI();
 }
 
-setTimer(state.sessionLength);
+setTimer(state.sessionLength, SESSION);
 updateUI();
