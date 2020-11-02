@@ -25,6 +25,9 @@ function updateUI(){
 
 function updateDisplay(){
     let minutes = state.timeLeft.getMinutes();
+    if(state.timeLeft.getHours() > 18){
+        minutes = 60;
+    }
     let seconds = state.timeLeft.getSeconds();
     if(minutes < 10) minutes = "0" + minutes;
     if(seconds < 10) seconds = "0" + seconds;
@@ -48,6 +51,7 @@ function updateTime(){
 }
 
 function sessionChange(val){
+    if(state.timerState === COUNTDOWN) return;
     let nextVal = state.sessionLength + val;
     if(!(nextVal < 1 || nextVal > 60)){
         state.sessionLength = nextVal;
@@ -95,10 +99,10 @@ function click(e){
             break;
         case 'reset':
             clearInterval(state.interval);
-            setTimer(state.sessionLength);
             state.timerState = INITIAL;
             state.sessionLength = 25;
             state.breakLength = 5;
+            setTimer(state.sessionLength);
             break;
     }
     updateUI();
