@@ -65,9 +65,7 @@ function updateTime(){
     state.timeLeft.setTime(state.timeLeft - 1000);
     if(state.timeLeft.getTime() < 0){
         changeMode();
-        return;
     }
-
     updateDisplay();
     updateUI()
 }
