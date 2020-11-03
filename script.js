@@ -22,6 +22,8 @@ let sessionLength = $("#session-length")[0];
 let breakLength = $("#break-length")[0];
 let timer = $("#time-left")[0];
 let timerLabel = $("#timer-label")[0];
+let bell = $("#beep")[0];
+bell.volume = 0.5;
 
 function updateUI(){
     sessionLength.innerHTML = state.sessionLength;
@@ -59,6 +61,7 @@ function changeMode(){
         case BREAK:
             setTimer(state.breakLength, SESSION);
     }
+    bell.play();
 }
 
 function updateTime(){
@@ -70,7 +73,7 @@ function updateTime(){
     updateUI()
 }
 
-function sessionChange(val){
+function sessionLengthChange(val){
     if(state.timerState === COUNTDOWN) return;
     let nextVal = state.sessionLength + val;
     if(!(nextVal < 1 || nextVal > 60)){
@@ -79,7 +82,7 @@ function sessionChange(val){
     setTimer(state.sessionLength, SESSION);
 }
 
-function breakChange(val){
+function breakLengthChange(val){
     if(state.timerState === COUNTDOWN) return;
     let nextVal = state.breakLength + val;
     if(!(nextVal < 1 || nextVal > 60)){
@@ -91,16 +94,16 @@ function breakChange(val){
 function click(e){
     switch(e.target.id){
         case 'session-increment':
-            sessionChange(1);
+            sessionLengthChange(1);
             break;
         case 'session-decrement':
-            sessionChange(-1);
+            sessionLengthChange(-1);
             break;
         case 'break-increment':
-            breakChange(1);
+            breakLengthChange(1);
             break;
         case 'break-decrement':
-            breakChange(-1);
+            breakLengthChange(-1);
             break;
         case 'start_stop':
             if(state.timerState === INITIAL){
@@ -123,6 +126,8 @@ function click(e){
             state.sessionLength = 25;
             state.breakLength = 5;
             setTimer(state.sessionLength, SESSION);
+            bell.pause();
+            bell.currentTime = 0;
             break;
     }
     updateUI();
