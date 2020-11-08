@@ -4,27 +4,34 @@
     <title>25 + 5 clock</title>
     <meta charset="UTF8">
     <link rel="stylesheet" href="./style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;400&display=swap" rel="stylesheet">
     <script src="jquery.js"></script>
     <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js" defer></script>
     <script src="script.js" defer></script>
   </head>
   <body>
     <div id="main-div">
-        <div id="timer-div">
-        <div id="session-label">Session Length</div>
-        <button id="session-increment" class="button">+</button>
-        <div id="session-length"></div>
-        <button id="session-decrement" class="button">-</button>
+      <div id="timer-div">
+        <div id="clock-div">
+          <div id="timer-label" class="label">Session</div>
+          <div id="time-left"></div>
+          <a href="#" id="start_stop" class="button">Start/Pause</a>
+          <a href="#" id="reset" class="button">Reset</a>
+        </div>
 
-        <div id="break-label">Break Length</div>
-        <button id="break-increment" class="button">+</button>
-        <div id="break-length"></div>
-        <button id="break-decrement" class="button">-</button>
+        <div class="time-control">
+          <div id="session-label" class="label">Session Length</div>
+          <a href="#" id="session-increment" class="button">+</a>
+          <div id="session-length"></div>
+          <a href="#" id="session-decrement" class="button">-</a>
+        </div>
 
-        <div id="timer-label">Session</div>
-        <div id="time-left"></div>
-        <button id="start_stop" class="button">start/pause</button>
-        <button id="reset" class="button">reset</button>
+        <div class="time-control">
+          <div id="break-label" class="label">Break Length</div>
+          <a href="#" id="break-increment" class="button">+</a>
+          <div id="break-length"></div>
+          <a href="#" id="break-decrement" class="button">-</a>
+        </div>
       </div>
 
       <audio id="beep" src='./bell.wav'>This browser does not support audio tags</audio>
